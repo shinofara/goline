@@ -67,7 +67,9 @@ type Config struct {
 }
 
 func NewServer(cfg *Config) *Server {
-	s := &Server{}
+	s := &Server{
+		cfg: cfg,
+	}
 	s.router = gin.New()
 	s.router.Use(gin.Logger())
 	return s
