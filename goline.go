@@ -85,3 +85,30 @@ func (s *Server) Run() {
 
 	s.router.Run(":" + os.Getenv("PORT"))
 }
+
+func Post(r SendRequest) (*http.Response, error) {
+	b, _ := json.Marshal(r)
+	req, _ := http.NewRequest(
+		"POST",
+		EndPoint,
+		bytes.NewBuffer(b),
+	)
+
+	req = setHeader(req)
+
+	proxyURL, _ := url.Parse(os.Getenv("FIXIE_URL"))
+	client := &http.Client{
+		Timeout:   time.Duration(15 * time.Second),
+		Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)},
+	}
+
+	return client.Do(req)
+}
+
+func setHeader(req *http.Request) *http.Request {
+	req.Header.Add("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Add("X-Line-ChannelID", os.Getenv("LINE_CHANNEL_ID"))
+	req.Header.Add("X-Line-ChannelSecret", os.Getenv("LINE_CHANNEL_SECRET"))
+	req.Header.Add("X-Line-Trusted-User-With-ACL", os.Getenv("LINE_CHANNEL_MID"))
+	return req
+}
