@@ -46,6 +46,7 @@ type Content struct {
 	ToType      int      `json:"toType"`
 	Text        string   `json:"text"`
 }
+
 type SendRequest struct {
 	To        []string `json:"to"`
 	ToChannel int      `json:"toChannel"`
@@ -58,9 +59,14 @@ type handler func([]BotResult) bool
 type Server struct {
 	router  *gin.Engine
 	handler handler
+	cfg     *Config
 }
 
-func NewServer() *Server {
+type Config struct {
+	RelativePath string
+}
+
+func NewServer(cfg *Config) *Server {
 	s := &Server{}
 	s.router = gin.New()
 	s.router.Use(gin.Logger())
@@ -72,7 +78,7 @@ func (s *Server) SetHandler(h handler) {
 }
 
 func (s *Server) Run() {
-	s.router.POST("/linebot/callback", func(c *gin.Context) {
+	s.router.POST(s.cfg.RelativePath, func(c *gin.Context) {
 		var botRequest BotRequest
 		if c.Bind(&botRequest) == nil {
 			c.JSON(http.StatusOK, gin.H{"status": fmt.Sprintf("request convert error, request data is %+v", botRequest)})
