@@ -41,7 +41,7 @@ type SendRequest struct {
 	To        []string `json:"to"`
 	ToChannel int      `json:"toChannel"`
 	EventType string   `json:"eventType"`
-	Content   Content  `json:"content"`
+	Content   *Content `json:"content"`
 }
 
 type handler func([]BotResult) bool
