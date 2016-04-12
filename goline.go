@@ -37,16 +37,6 @@ type BotResult struct {
 	Content     Content  `json:"content"`
 }
 
-type Content struct {
-	ID          string   `json:"id"`
-	ContentType int      `json:"contentType"`
-	From        string   `json:"from"`
-	CreatedTime int      `json:"createdTime"`
-	To          []string `json:"to"`
-	ToType      int      `json:"toType"`
-	Text        string   `json:"text"`
-}
-
 type SendRequest struct {
 	To        []string `json:"to"`
 	ToChannel int      `json:"toChannel"`
